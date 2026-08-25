@@ -119,14 +119,14 @@ resourceForm?.addEventListener('submit', (event) => {
 
   if (requestedResource.href) {
     resourceContinue.href = requestedResource.href;
-    resourceContinue.textContent = '填写完成，查看资料';
+    resourceContinue.textContent = requestedResource.href.toLowerCase().endsWith('.pptx') ? '填写完成，打开PPTX' : '填写完成，查看资料';
     resourceContinue.classList.remove('is-hidden');
     status.textContent = '请在邮件客户端确认发送，然后返回本页查看资料。';
   } else {
     resourceContinue.classList.add('is-hidden');
     status.textContent = '请在邮件客户端确认发送，资料更新后我们将与你联系。';
   }
-  window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(`官网资料申请｜${requestedResource.name}`)}&body=${encodeURIComponent(body)}`;
+  window.location.href = `mailto:wuyu@zuofeibio.com?subject=${encodeURIComponent(`官网资料申请｜${requestedResource.name}`)}&body=${encodeURIComponent(body)}`;
 });
 
 const resourceCards = [...document.querySelectorAll('.resource-card')];
