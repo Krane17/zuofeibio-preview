@@ -67,7 +67,7 @@ contactForm?.addEventListener('submit', (event) => {
   ].join('\n');
 
   status.textContent = '正在打开邮件客户端，请确认后发送。';
-  window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = `mailto:wuyu@zuofeibio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
 
 const resourceDialog = document.querySelector('#resource-dialog');
@@ -128,6 +128,35 @@ resourceForm?.addEventListener('submit', (event) => {
   }
   window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(`官网资料申请｜${requestedResource.name}`)}&body=${encodeURIComponent(body)}`;
 });
+
+const resourceCards = [...document.querySelectorAll('.resource-card')];
+const resourceFilters = [...document.querySelectorAll('.resource-filter')];
+const resourceSearch = document.querySelector('#resource-search');
+const resourceCount = document.querySelector('#resource-count');
+const resourceEmpty = document.querySelector('#resource-empty');
+let activeResourceFilter = 'all';
+
+const updateResourceLibrary = () => {
+  const keyword = String(resourceSearch?.value || '').trim().toLowerCase();
+  let visibleCount = 0;
+  resourceCards.forEach((card) => {
+    const categoryMatch = activeResourceFilter === 'all' || card.dataset.resourceCategory === activeResourceFilter;
+    const keywordMatch = !keyword || String(card.dataset.resourceTitle || card.textContent).toLowerCase().includes(keyword);
+    card.hidden = !(categoryMatch && keywordMatch);
+    if (!card.hidden) visibleCount += 1;
+  });
+  if (resourceCount) resourceCount.textContent = `共 ${visibleCount} 项资料`;
+  resourceEmpty?.classList.toggle('is-hidden', visibleCount !== 0);
+};
+
+resourceFilters.forEach((button) => {
+  button.addEventListener('click', () => {
+    activeResourceFilter = button.dataset.resourceFilter || 'all';
+    resourceFilters.forEach((item) => item.classList.toggle('is-active', item === button));
+    updateResourceLibrary();
+  });
+});
+resourceSearch?.addEventListener('input', updateResourceLibrary);
 
 const revealItems = document.querySelectorAll('[data-reveal]');
 if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
