@@ -119,9 +119,10 @@ resourceForm?.addEventListener('submit', (event) => {
 
   if (requestedResource.href) {
     resourceContinue.href = requestedResource.href;
-    resourceContinue.textContent = requestedResource.href.toLowerCase().endsWith('.pptx') ? '填写完成，打开PPTX' : '填写完成，查看资料';
+    resourceContinue.textContent = requestedResource.href.toLowerCase().endsWith('.pptx') ? '如未打开，点击打开PPTX' : '如未打开，点击查看资料';
     resourceContinue.classList.remove('is-hidden');
-    status.textContent = '请在邮件客户端确认发送，然后返回本页查看资料。';
+    window.open(requestedResource.href, '_blank', 'noopener');
+    status.textContent = '资料已在新窗口打开；同时请在邮件客户端确认发送。';
   } else {
     resourceContinue.classList.add('is-hidden');
     status.textContent = '请在邮件客户端确认发送，资料更新后我们将与你联系。';
