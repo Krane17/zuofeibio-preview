@@ -67,7 +67,7 @@ contactForm?.addEventListener('submit', (event) => {
   ].join('\n');
 
   status.textContent = '正在打开邮件客户端，请确认后发送。';
-  window.location.href = `mailto:wuyu@zuofeibio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
 
 const resourceDialog = document.querySelector('#resource-dialog');
@@ -127,7 +127,7 @@ resourceForm?.addEventListener('submit', (event) => {
     resourceContinue.classList.add('is-hidden');
     status.textContent = '请在邮件客户端确认发送，资料更新后我们将与你联系。';
   }
-  window.location.href = `mailto:wuyu@zuofeibio.com?subject=${encodeURIComponent(`官网资料申请｜${requestedResource.name}`)}&body=${encodeURIComponent(body)}`;
+  window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(`官网资料申请｜${requestedResource.name}`)}&body=${encodeURIComponent(body)}`;
 });
 
 const resourceCards = [...document.querySelectorAll('.resource-card')];
@@ -158,6 +158,19 @@ resourceFilters.forEach((button) => {
   });
 });
 resourceSearch?.addEventListener('input', updateResourceLibrary);
+
+const sceneCarousel = document.querySelector('[data-scene-carousel]');
+const scenePrev = document.querySelector('[data-scene-prev]');
+const sceneNext = document.querySelector('[data-scene-next]');
+const moveSceneCarousel = (direction) => {
+  if (!sceneCarousel) return;
+  sceneCarousel.scrollBy({
+    left: sceneCarousel.clientWidth * 0.72 * direction,
+    behavior: 'smooth'
+  });
+};
+scenePrev?.addEventListener('click', () => moveSceneCarousel(-1));
+sceneNext?.addEventListener('click', () => moveSceneCarousel(1));
 
 const revealItems = document.querySelectorAll('[data-reveal]');
 if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
