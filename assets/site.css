@@ -1363,7 +1363,10 @@ p { margin: 0; }
   margin-top: 0;
 }
 
-.products-page .shop-hero-metrics { max-width: 820px; }
+.products-page .shop-hero-metrics {
+  bottom: clamp(28px, 4vh, 44px);
+  max-width: 820px;
+}
 
 @media (max-width: 640px) {
   .hero--ai4s h1,
@@ -1391,4 +1394,6 @@ p { margin: 0; }
   }
 
   .about-page .about-hero-copy h1 span { white-space: normal; }
+
+  .products-page .shop-hero-metrics { bottom: 18px; }
 }
