@@ -1284,3 +1284,111 @@ p { margin: 0; }
   .selection-form { padding: 18px; }
   .selection-form .form-grid { grid-template-columns: 1fr; }
 }
+
+/* Unified primary hero typography and alignment */
+.hero--ai4s .hero-grid,
+.products-page .products-hero .container,
+.about-page .about-hero .container {
+  width: var(--container);
+  min-height: calc(100svh - 78px);
+  margin-inline: auto;
+}
+
+.products-page .products-hero,
+.about-page .about-hero {
+  min-height: calc(100svh - 78px);
+  padding: 0;
+}
+
+.products-page .products-hero .container,
+.about-page .about-hero .container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.hero--ai4s .hero-copy,
+.products-page .products-hero-copy,
+.about-page .about-hero-copy {
+  position: absolute;
+  top: clamp(170px, 24vh, 230px);
+  left: 0;
+  width: min(100%, 860px);
+  max-width: 860px;
+}
+
+.hero--ai4s .hero-copy { padding: 0; }
+
+.hero--ai4s .hero-grid { grid-template-columns: minmax(0, 860px); }
+
+.hero--ai4s h1,
+.products-page .products-hero h1,
+.about-page .about-hero-copy h1 {
+  max-width: 860px;
+  font-size: clamp(3.35rem, 5.4vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -.045em;
+}
+
+.hero--ai4s h1 span,
+.about-page .about-hero-copy h1 span {
+  display: block;
+  font-size: 1em;
+  white-space: nowrap;
+  letter-spacing: inherit;
+}
+
+.products-page .products-hero .breadcrumbs,
+.about-page .about-hero .breadcrumbs {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  margin: 0;
+}
+
+.about-page .about-hero-grid {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+}
+
+.products-page .shop-hero-metrics,
+.about-page .about-hero-facts {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin-top: 0;
+}
+
+.products-page .shop-hero-metrics { max-width: 820px; }
+
+@media (max-width: 640px) {
+  .hero--ai4s h1,
+  .products-page .products-hero h1,
+  .about-page .about-hero-copy h1 {
+    font-size: clamp(2.65rem, 12vw, 3.45rem);
+    line-height: 1.04;
+  }
+
+  .products-page .products-hero .container,
+  .about-page .about-hero .container {
+    min-height: calc(100svh - 78px);
+    padding: 88px 0 150px;
+  }
+
+  .products-page .products-hero .breadcrumbs,
+  .about-page .about-hero .breadcrumbs { top: 22px; }
+
+  .hero--ai4s .hero-copy,
+  .products-page .products-hero-copy,
+  .about-page .about-hero-copy {
+    position: relative;
+    top: auto;
+    left: auto;
+  }
+
+  .about-page .about-hero-copy h1 span { white-space: normal; }
+}
