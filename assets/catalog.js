@@ -220,7 +220,7 @@
     renderSelection();
   });
 
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const items = selectedProducts();
     if (!items.length) {
@@ -229,17 +229,41 @@
     }
     if (!form.reportValidity()) return;
     const values = new FormData(form);
+    const phone = String(values.get('phone') || '').trim();
+    if (!/^1[3-9]\d{9}$/.test(phone)) {
+      selectionStatus.textContent = '请输入正确的11位手机号码。';
+      selectionStatus.classList.add('is-error');
+      form.elements.phone.focus();
+      return;
+    }
     const list = items.map((item, index) => `${index + 1}. ${item.name}（${item.source === 'own' ? '昨非自研' : '精选代理'} / ${item.category}）`).join('\n');
-    const body = [
-      `姓名：${values.get('name')}`,
-      `联系电话：${values.get('phone')}`,
-      `公司/机构：${values.get('company')}`,
-      `邮箱：${values.get('email') || '未填写'}`,
-      '', '咨询产品：', list,
-      '', `补充需求：${values.get('message') || '无'}`
-    ].join('\n');
-    selectionStatus.textContent = '已生成咨询邮件，请在邮件客户端确认发送。';
-    window.location.href = `mailto:info@zuofeibio.com?subject=${encodeURIComponent(`官网产品咨询（${items.length}款）`)}&body=${encodeURIComponent(body)}`;
+    const forms = window.ZUOFEI_FORMS;
+    if (!forms) {
+      selectionStatus.textContent = '在线接收服务尚未加载，请刷新页面后重试。';
+      selectionStatus.classList.add('is-error');
+      return;
+    }
+
+    forms.setSubmitting(form, true, '正在提交产品咨询…');
+    try {
+      await forms.submitLead({
+        formType: 'products',
+        products: list,
+        name: String(values.get('name') || '').trim(),
+        phone,
+        company: String(values.get('company') || '').trim(),
+        email: String(values.get('email') || '').trim(),
+        message: String(values.get('message') || '').trim(),
+        website: ''
+      });
+      form.reset();
+      selected.clear();
+      renderProducts();
+      renderSelection();
+      forms.setSubmitting(form, false, '提交成功。昨非团队已收到产品清单，会尽快联系你。', 'success');
+    } catch (error) {
+      forms.setSubmitting(form, false, forms.submissionErrorMessage(error), 'error');
+    }
   });
 
   renderProducts();
