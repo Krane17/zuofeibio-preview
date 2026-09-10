@@ -8,7 +8,7 @@
     ['02', '全自动克隆筛选接种工作站'],
     ['03', '分液仪'],
     ['04', '封膜仪'],
-    ['05', '耗材与试剂'],
+    ['05', '试剂耗材'],
     ['06', '核酸、蛋白、细胞与动物实验'],
     ['07', '摇床、培养箱、恒温与混匀'],
     ['08', '离心、干燥与浓缩'],
@@ -32,7 +32,14 @@
     ['own-microplate', '微孔板', '05', '/media/catalog/products/own-consumable-03.webp', '适配实验室自动化流程的多规格微孔板。'],
     ['own-reservoir', '储液槽', '05', '/media/catalog/products/own-consumable-04.webp', '适用于自动化液体分配流程的储液耗材。'],
     ['own-protein', '植物源重组蛋白', '05', '/media/catalog/products/own-consumable-05.webp', '植物源表达的重组蛋白产品。']
-  ].map(([id, name, categoryCode, image, summary]) => ({ id, name, categoryCode, image, summary, source: 'own' }));
+  ].map(([id, name, categoryCode, image, summary]) => ({
+    id,
+    name,
+    categoryCode,
+    image,
+    summary,
+    source: categoryCode === '05' ? 'consumable' : 'own'
+  }));
 
   const agencyGroups = [
     ['06', [
@@ -135,6 +142,7 @@
   });
 
   const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+  const sourceLabel = (product) => product.source === 'own' ? '自动化产品' : product.source === 'consumable' ? '试剂耗材' : '常规仪器';
   const selectedProducts = () => [...selected].map((id) => productMap.get(id)).filter(Boolean);
   const persistSelection = () => localStorage.setItem(storageKey, JSON.stringify([...selected]));
 
@@ -145,7 +153,7 @@
       if (source !== 'all' && product.source !== source) return false;
       if (category !== 'all' && product.categoryCode !== category) return false;
       if (!query) return true;
-      return `${product.name} ${product.category} ${product.summary} ${product.source === 'own' ? '自动化产品' : '常规仪器'}`.toLowerCase().includes(query);
+      return `${product.name} ${product.category} ${product.summary} ${sourceLabel(product)}`.toLowerCase().includes(query);
     });
   }
 
@@ -157,7 +165,7 @@
     grid.innerHTML = visible.map((product) => {
       const isSelected = selected.has(product.id);
       return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}">
-        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(product.name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${product.source === 'own' ? '自动化产品' : '常规仪器'}</span></div>
+        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(product.name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
         <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.summary)}</p></div>
         <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}"><span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}</button>
       </article>`;
@@ -170,7 +178,7 @@
     selectionCount.textContent = String(items.length);
     selectionListCount.textContent = String(items.length);
     selectionPreview.textContent = items.length ? items.slice(0, 2).map((item) => item.name).join('、') + (items.length > 2 ? ` 等${items.length}款` : '') : '请选择需要咨询的产品';
-    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${product.source === 'own' ? '自动化产品' : '常规仪器'} · ${product.category}</span><strong>${escapeHtml(product.name)}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(product.name)}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
+    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${sourceLabel(product)} · ${product.category}</span><strong>${escapeHtml(product.name)}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(product.name)}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
     document.body.classList.toggle('has-selection-dock', items.length > 0);
     persistSelection();
   }
@@ -181,15 +189,19 @@
     renderSelection();
   }
 
-  function clearFilters() {
-    searchInput.value = '';
-    categorySelect.value = 'all';
-    source = 'all';
+  function setSource(nextSource) {
+    source = nextSource;
     sourceButtons.forEach((button) => {
-      const active = button.dataset.source === 'all';
+      const active = button.dataset.source === nextSource;
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', String(active));
     });
+  }
+
+  function clearFilters() {
+    searchInput.value = '';
+    categorySelect.value = 'all';
+    setSource('all');
     renderProducts();
   }
 
@@ -204,14 +216,21 @@
     if (button) toggleProduct(button.dataset.selectProduct);
   });
   searchInput.addEventListener('input', renderProducts);
-  categorySelect.addEventListener('change', renderProducts);
+  categorySelect.addEventListener('change', () => {
+    const category = categorySelect.value;
+    if (category !== 'all') {
+      const matchingSources = [...new Set(products.filter((product) => product.categoryCode === category).map((product) => product.source))];
+      if (matchingSources.length === 1) setSource(matchingSources[0]);
+    }
+    renderProducts();
+  });
   sourceButtons.forEach((button) => button.addEventListener('click', () => {
-    source = button.dataset.source;
-    sourceButtons.forEach((item) => {
-      const active = item === button;
-      item.classList.toggle('is-active', active);
-      item.setAttribute('aria-pressed', String(active));
-    });
+    const nextSource = button.dataset.source;
+    const category = categorySelect.value;
+    if (category !== 'all' && nextSource !== 'all' && !products.some((product) => product.categoryCode === category && product.source === nextSource)) {
+      categorySelect.value = 'all';
+    }
+    setSource(nextSource);
     renderProducts();
   }));
   clearFiltersButton.addEventListener('click', clearFilters);
@@ -249,7 +268,7 @@
       form.elements.phone.focus();
       return;
     }
-    const list = items.map((item, index) => `${index + 1}. ${item.name}（${item.source === 'own' ? '自动化产品' : '常规仪器'} / ${item.category}）`).join('\n');
+    const list = items.map((item, index) => `${index + 1}. ${item.name}（${sourceLabel(item)} / ${item.category}）`).join('\n');
     const forms = window.ZUOFEI_FORMS;
     if (!forms) {
       selectionStatus.textContent = '在线接收服务尚未加载，请刷新页面后重试。';
