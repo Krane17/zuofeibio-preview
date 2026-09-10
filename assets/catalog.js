@@ -59,7 +59,7 @@
       'GelView5000 Plus智能凝胶成像系统', 'GelView6000 Plus智能图像工作站', 'Lux-T020 Pro高灵敏度管式发光检测仪', 'Lux-P110高灵敏度板式发光检测仪', 'FCS分子互作分析仪'
     ]],
     ['10', [
-      'iSTORM系列超高分辨率显微成像系统', 'PanoScan-Dual智能倒置荧光显微分析系统', '赛乐微活细胞分析系统', 'INCount系列全自动细胞计数仪', '干式智能细胞复苏仪'
+      'iSTORM系列超高分辨率显微成像系统', 'PanoScan-Dual智能倒置荧光显微分析系统', '赛乐微活细胞分析系统', 'INCount系列全自动细胞计数仪'
     ]],
     ['11', [
       'AniView SE小动物活体成像系统', 'AniView 100/600多模式动物活体成像系统', 'AniView Pro', 'AniView X系列多模式动物活体成像系统', 'AniView DXA系列多模式动物活体成像系统',
@@ -74,15 +74,28 @@
     '07': '培养、恒温、振荡、混匀、搅拌与灭菌设备。',
     '08': '离心、干燥、氮吹与真空浓缩设备。',
     '09': '电泳、蛋白印迹、凝胶与发光成像分析设备。',
-    '10': '显微成像、活细胞分析、细胞计数与复苏设备。',
+    '10': '显微成像、活细胞分析与细胞计数设备。',
     '11': '小动物活体、荧光、CT及多模态成像设备。'
+  };
+
+  const agencyImageOverrides = {
+    'ZF-Multra系列多功能酶标仪': '/media/catalog/products/zf-multra.png',
+    'zMR系列全自动酶标仪': '/media/catalog/products/zmr.png',
+    'AniView Pro': '/media/catalog/products/aniview-pro-v3.png',
+    'AniView X系列多模式动物活体成像系统': '/media/catalog/products/aniview-x-dxa-v3.png',
+    'AniView DXA系列多模式动物活体成像系统': '/media/catalog/products/aniview-x-dxa-v3.png',
+    'AniView 30F近红外二区活体成像系统': '/media/catalog/products/aniview-30f-v3.png',
+    'AniView Phoenix X/DXA系列全光谱动物活体成像系统': '/media/catalog/products/aniview-phoenix-v3.png',
+    'AniView Kirin系列小动物活体三维成像系统': '/media/catalog/products/aniview-kirin-v3.png',
+    'Gscan系列组织全景扫描仪': '/media/catalog/products/gscan-v2.png',
+    'SkyView系列小动物活体CT多模态融合成像系统': '/media/catalog/products/skyview-v2.png'
   };
 
   const agencyProducts = agencyGroups.flatMap(([categoryCode, names]) => names.map((name, index) => ({
     id: `agency-${categoryCode}-${String(index + 1).padStart(2, '0')}`,
     name,
     categoryCode,
-    image: `/media/catalog/products/agency-${categoryCode}-${String(index + 1).padStart(2, '0')}.webp`,
+    image: agencyImageOverrides[name] || `/media/catalog/products/agency-${categoryCode}-${String(index + 1).padStart(2, '0')}.webp`,
     summary: agencySummary[categoryCode],
     source: 'agency'
   })));
@@ -132,7 +145,7 @@
       if (source !== 'all' && product.source !== source) return false;
       if (category !== 'all' && product.categoryCode !== category) return false;
       if (!query) return true;
-      return `${product.name} ${product.category} ${product.summary} ${product.source === 'own' ? '昨非 自研' : '代理'}`.toLowerCase().includes(query);
+      return `${product.name} ${product.category} ${product.summary} ${product.source === 'own' ? '自动化产品' : '常规仪器'}`.toLowerCase().includes(query);
     });
   }
 
@@ -144,7 +157,7 @@
     grid.innerHTML = visible.map((product) => {
       const isSelected = selected.has(product.id);
       return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}">
-        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(product.name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${product.source === 'own' ? '昨非自研' : '精选代理'}</span></div>
+        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(product.name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${product.source === 'own' ? '自动化产品' : '常规仪器'}</span></div>
         <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.summary)}</p></div>
         <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}"><span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}</button>
       </article>`;
@@ -157,7 +170,7 @@
     selectionCount.textContent = String(items.length);
     selectionListCount.textContent = String(items.length);
     selectionPreview.textContent = items.length ? items.slice(0, 2).map((item) => item.name).join('、') + (items.length > 2 ? ` 等${items.length}款` : '') : '请选择需要咨询的产品';
-    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${product.source === 'own' ? '自研' : '代理'} · ${product.category}</span><strong>${escapeHtml(product.name)}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(product.name)}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
+    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${product.source === 'own' ? '自动化产品' : '常规仪器'} · ${product.category}</span><strong>${escapeHtml(product.name)}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(product.name)}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
     document.body.classList.toggle('has-selection-dock', items.length > 0);
     persistSelection();
   }
@@ -236,7 +249,7 @@
       form.elements.phone.focus();
       return;
     }
-    const list = items.map((item, index) => `${index + 1}. ${item.name}（${item.source === 'own' ? '昨非自研' : '精选代理'} / ${item.category}）`).join('\n');
+    const list = items.map((item, index) => `${index + 1}. ${item.name}（${item.source === 'own' ? '自动化产品' : '常规仪器'} / ${item.category}）`).join('\n');
     const forms = window.ZUOFEI_FORMS;
     if (!forms) {
       selectionStatus.textContent = '在线接收服务尚未加载，请刷新页面后重试。';
