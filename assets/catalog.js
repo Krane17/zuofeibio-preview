@@ -87,15 +87,15 @@
 
   const agencyImageOverrides = {
     'ZF-Multra系列多功能酶标仪': '/media/catalog/products/zf-multra.png',
-    'zMR系列全自动酶标仪': '/media/catalog/products/zmr.png',
+    'zMR系列全自动酶标仪': '/media/catalog/products/zmr-v2.png',
     'AniView Pro': '/media/catalog/products/aniview-pro-v3.png',
     'AniView X系列多模式动物活体成像系统': '/media/catalog/products/aniview-x-dxa-v3.png',
     'AniView DXA系列多模式动物活体成像系统': '/media/catalog/products/aniview-x-dxa-v3.png',
-    'AniView 30F近红外二区活体成像系统': '/media/catalog/products/aniview-30f-v3.png',
-    'AniView Phoenix X/DXA系列全光谱动物活体成像系统': '/media/catalog/products/aniview-phoenix-v3.png',
-    'AniView Kirin系列小动物活体三维成像系统': '/media/catalog/products/aniview-kirin-v3.png',
-    'Gscan系列组织全景扫描仪': '/media/catalog/products/gscan-v2.png',
-    'SkyView系列小动物活体CT多模态融合成像系统': '/media/catalog/products/skyview-v2.png'
+    'AniView 30F近红外二区活体成像系统': '/media/catalog/products/aniview-30f-v4.png',
+    'AniView Phoenix X/DXA系列全光谱动物活体成像系统': '/media/catalog/products/aniview-phoenix-v4.png',
+    'AniView Kirin系列小动物活体三维成像系统': '/media/catalog/products/aniview-kirin-v4.png',
+    'Gscan系列组织全景扫描仪': '/media/catalog/products/gscan-v3.png',
+    'SkyView系列小动物活体CT多模态融合成像系统': '/media/catalog/products/skyview-v3.png'
   };
 
   const agencyProducts = agencyGroups.flatMap(([categoryCode, names]) => names.map((name, index) => ({
