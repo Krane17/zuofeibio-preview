@@ -46,7 +46,8 @@
       'ZF系列全自动核酸提取仪', 'ZF-10梯度PCR仪', 'Gene-8C等温扩增实时荧光检测仪', 'ZJ-2000原位杂交仪', 'celetrix电转仪',
       'ZF-Multra系列多功能酶标仪', 'zMR系列全自动酶标仪', 'ZF-812洗板机', 'ZBC-108蓝光切胶仪', 'ZF-DE96自动开关盖机',
       'zNano系列超微量分光光度计', 'zFluo-1荧光计', 'NextGen FFE自由流电泳', 'JN系列超高压细胞破碎机', 'YM系列研磨仪',
-      'ZF-T600A小动物麻醉机', '全自动二合一移液吸头装盒机'
+      'ZF-T600A小动物麻醉机', '全自动二合一移液吸头装盒机',
+      'AT-200实时荧光定量PCR仪器', 'AT-300全自动螺旋加样仪'
     ]],
     ['07', [
       'ZS系列加热型恒温摇床', 'YC系列轨道式细胞摇床', 'RS系列翘板摇床', 'ZFGZ-Q系列LED光照培养箱', 'ZFGZ系列LED光照培养箱',
@@ -98,13 +99,25 @@
     'SkyView系列小动物活体CT多模态融合成像系统': '/media/catalog/products/skyview-v3.png'
   };
 
+  const agencyProductDetails = {
+    'AT-200实时荧光定量PCR仪器': {
+      image: '/media/catalog/products/at-200-qpcr.png',
+      summary: '集成磁珠提取、体系加样、qPCR扩增与结果分析，支持全流程自动化操作。'
+    },
+    'AT-300全自动螺旋加样仪': {
+      image: '/media/catalog/products/at-300-spiral-plater.png',
+      summary: '自动完成均质袋开袋、梯度稀释、培养皿加液与涂板，支持耗材自动上下料。'
+    }
+  };
+
   const agencyProducts = agencyGroups.flatMap(([categoryCode, names]) => names.map((name, index) => ({
     id: `agency-${categoryCode}-${String(index + 1).padStart(2, '0')}`,
     name,
     categoryCode,
     image: agencyImageOverrides[name] || `/media/catalog/products/agency-${categoryCode}-${String(index + 1).padStart(2, '0')}.webp`,
     summary: agencySummary[categoryCode],
-    source: 'agency'
+    source: 'agency',
+    ...agencyProductDetails[name]
   })));
 
   const products = [...ownProducts, ...agencyProducts].map((product) => ({ ...product, category: categoryName[product.categoryCode] }));
