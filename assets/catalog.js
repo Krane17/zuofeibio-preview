@@ -28,16 +28,24 @@
     ['own-dangkang', '当康封膜仪', '04', '/media/products/dangkang.webp', '一键快速片膜封膜，兼容多种高度孔板。'],
     ['own-dangkang-x', '当康X封膜仪', '04', '/media/products/dangkang-x.webp', '卷膜方式连续封膜，适配3-60mm高度孔板。'],
     ['own-auto-tip', '自动化吸头', '05', '/media/catalog/products/own-consumable-01.webp', '面向自动化移液平台的配套吸头。'],
+    ['consumable-i-tips-125-10-s', 'I-规格吸头', '05', '/media/catalog/products/i-tips-125-10-s.png', '125μl/透明/灭菌/无滤芯，384支/盒。', 'I-TIPS-125.10-s', {
+      compatibility: '配套文鳐、吉量使用',
+      productCode: 'Z05851',
+      packaging: ['一体盒', '10小盒/中盒', '5中盒/箱', '50小盒/箱'],
+      shipping: '（2箱起含运费）'
+    }],
     ['own-universal-tip', '通用吸头', '05', '/media/catalog/products/own-consumable-02.webp', '覆盖常用移液规格的通用吸头。'],
     ['own-microplate', '微孔板', '05', '/media/catalog/products/own-consumable-03.webp', '适配实验室自动化流程的多规格微孔板。'],
     ['own-reservoir', '储液槽', '05', '/media/catalog/products/own-consumable-04.webp', '适用于自动化液体分配流程的储液耗材。'],
     ['own-protein', '植物源重组蛋白', '05', '/media/catalog/products/own-consumable-05.webp', '植物源表达的重组蛋白产品。']
-  ].map(([id, name, categoryCode, image, summary]) => ({
+  ].map(([id, name, categoryCode, image, summary, model, details = {}]) => ({
     id,
     name,
     categoryCode,
     image,
     summary,
+    ...(model ? { model } : {}),
+    ...details,
     source: categoryCode === '05' ? 'consumable' : 'own'
   }));
 
@@ -160,6 +168,8 @@
 
   const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
   const sourceLabel = (product) => product.source === 'own' ? '自动化产品' : product.source === 'consumable' ? '试剂耗材' : '常规仪器';
+  const productName = (product) => product.name + (product.compatibility ? `（${product.compatibility}）` : '');
+  const productLabel = (product) => product.model ? `${productName(product)}（${product.model}）` : productName(product);
   const selectedProducts = () => [...selected].map((id) => productMap.get(id)).filter(Boolean);
   const persistSelection = () => localStorage.setItem(storageKey, JSON.stringify([...selected]));
 
@@ -170,7 +180,7 @@
       if (source !== 'all' && product.source !== source) return false;
       if (category !== 'all' && product.categoryCode !== category) return false;
       if (!query) return true;
-      return `${product.name} ${product.category} ${product.summary} ${sourceLabel(product)}`.toLowerCase().includes(query);
+      return `${productName(product)} ${product.model || ''} ${product.productCode || ''} ${product.category} ${product.summary} ${sourceLabel(product)}`.toLowerCase().includes(query);
     });
   }
 
@@ -182,8 +192,8 @@
     grid.innerHTML = visible.map((product) => {
       const isSelected = selected.has(product.id);
       return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}">
-        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(product.name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
-        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.summary)}</p></div>
+        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(productName(product))}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
+        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}</h3>${product.productCode ? `<p class="shop-product-model">产品编号：${escapeHtml(product.productCode)}</p>` : ''}${product.model ? `<p class="shop-product-model">型号：${escapeHtml(product.model)}</p>` : ''}<p class="shop-product-summary">${escapeHtml(product.summary)}</p>${product.packaging ? `<div class="shop-product-details"><ul class="shop-product-packaging">${product.packaging.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${product.shipping ? `<p class="shop-product-shipping">${escapeHtml(product.shipping)}</p>` : ''}</div>` : ''}</div>
         <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}"><span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}</button>
       </article>`;
     }).join('');
@@ -194,8 +204,8 @@
     selectionDock.hidden = items.length === 0;
     selectionCount.textContent = String(items.length);
     selectionListCount.textContent = String(items.length);
-    selectionPreview.textContent = items.length ? items.slice(0, 2).map((item) => item.name).join('、') + (items.length > 2 ? ` 等${items.length}款` : '') : '请选择需要咨询的产品';
-    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${sourceLabel(product)} · ${product.category}</span><strong>${escapeHtml(product.name)}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(product.name)}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
+    selectionPreview.textContent = items.length ? items.slice(0, 2).map(productLabel).join('、') + (items.length > 2 ? ` 等${items.length}款` : '') : '请选择需要咨询的产品';
+    selectionList.innerHTML = items.length ? items.map((product) => `<li><div><span>${sourceLabel(product)} · ${product.category}</span><strong>${escapeHtml(productLabel(product))}</strong></div><button type="button" data-remove-product="${product.id}" aria-label="从清单移除${escapeHtml(productLabel(product))}">移除</button></li>`).join('') : '<li class="selection-list-empty">还没有选择产品，请返回产品目录添加。</li>';
     document.body.classList.toggle('has-selection-dock', items.length > 0);
     persistSelection();
   }
@@ -285,7 +295,7 @@
       form.elements.phone.focus();
       return;
     }
-    const list = items.map((item, index) => `${index + 1}. ${item.name}（${sourceLabel(item)} / ${item.category}）`).join('\n');
+    const list = items.map((item, index) => `${index + 1}. ${productLabel(item)}（${sourceLabel(item)} / ${item.category}）${item.productCode ? ` / 产品编号：${item.productCode}` : ''}`).join('\n');
     const forms = window.ZUOFEI_FORMS;
     if (!forms) {
       selectionStatus.textContent = '在线接收服务尚未加载，请刷新页面后重试。';
