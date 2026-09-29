@@ -122,7 +122,7 @@
     },
     'ZF-Multi多功能酶标仪': {
       image: '/media/catalog/products/zf-multi.png',
-      summary: '12英寸高分辨电容嵌入触摸屏，嵌入触摸屏幕支持6-384孔板'
+      summary: '12英寸高分辨电容嵌入触摸屏，嵌入触摸屏幕支持6-384孔板。\n全波长比色皿功能：标准1cm立式比色皿'
     }
   };
 
@@ -197,7 +197,7 @@
       const isSelected = selected.has(product.id);
       return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}">
         <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(productName(product))}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
-        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}</h3>${product.productCode ? `<p class="shop-product-model">产品编号：${escapeHtml(product.productCode)}</p>` : ''}${product.model ? `<p class="shop-product-model">型号：${escapeHtml(product.model)}</p>` : ''}<p class="shop-product-summary">${escapeHtml(product.summary)}</p>${product.packaging ? `<div class="shop-product-details"><ul class="shop-product-packaging">${product.packaging.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${product.shipping ? `<p class="shop-product-shipping">${escapeHtml(product.shipping)}</p>` : ''}</div>` : ''}</div>
+        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}</h3>${product.productCode ? `<p class="shop-product-model">产品编号：${escapeHtml(product.productCode)}</p>` : ''}${product.model ? `<p class="shop-product-model">型号：${escapeHtml(product.model)}</p>` : ''}${product.summary.split('\n').map((paragraph) => `<p class="shop-product-summary">${escapeHtml(paragraph)}</p>`).join('')}${product.packaging ? `<div class="shop-product-details"><ul class="shop-product-packaging">${product.packaging.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${product.shipping ? `<p class="shop-product-shipping">${escapeHtml(product.shipping)}</p>` : ''}</div>` : ''}</div>
         <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}"><span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}</button>
       </article>`;
     }).join('');
