@@ -26,18 +26,7 @@
     ['own-qinggeng-8', '青耕-8分液仪', '03', '/media/products/qinggeng-8.webp', '紧凑型8通道快速分液平台，适配多规格SBS标准板。'],
     ['own-bifang', '毕方分液仪', '03', '/media/products/bifang.webp', '基于Scara运动技术的高效率自动分液平台。'],
     ['own-dangkang', '当康封膜仪', '04', '/media/products/dangkang.webp', '一键快速片膜封膜，兼容多种高度孔板。'],
-    ['own-dangkang-x', '当康X封膜仪', '04', '/media/products/dangkang-x.webp', '卷膜方式连续封膜，适配3-60mm高度孔板。'],
-    ['own-auto-tip', '自动化吸头', '05', '/media/catalog/products/own-consumable-01.webp', '面向自动化移液平台的配套吸头。'],
-    ['consumable-i-tips-125-10-s', 'I-规格吸头', '05', '/media/catalog/products/i-tips-125-10-s.png', '125μl/透明/灭菌/无滤芯，384支/盒。', 'I-TIPS-125.10-s', {
-      compatibility: '配套文鳐、吉量使用',
-      productCode: 'Z05851',
-      packaging: ['一体盒', '10小盒/中盒', '5中盒/箱', '50小盒/箱'],
-      shipping: '（2箱起含运费）'
-    }],
-    ['own-universal-tip', '通用吸头', '05', '/media/catalog/products/own-consumable-02.webp', '覆盖常用移液规格的通用吸头。'],
-    ['own-microplate', '微孔板', '05', '/media/catalog/products/own-consumable-03.webp', '适配实验室自动化流程的多规格微孔板。'],
-    ['own-reservoir', '储液槽', '05', '/media/catalog/products/own-consumable-04.webp', '适用于自动化液体分配流程的储液耗材。'],
-    ['own-protein', '植物源重组蛋白', '05', '/media/catalog/products/own-consumable-05.webp', '植物源表达的重组蛋白产品。']
+    ['own-dangkang-x', '当康X封膜仪', '04', '/media/products/dangkang-x.webp', '卷膜方式连续封膜，适配3-60mm高度孔板。']
   ].map(([id, name, categoryCode, image, summary, model, details = {}]) => ({
     id,
     name,
@@ -47,6 +36,74 @@
     ...(model ? { model } : {}),
     ...details,
     source: categoryCode === '05' ? 'consumable' : 'own'
+  }));
+
+  // Consumables are maintained by product code against 耗材清单.pdf (2026-10-12).
+  // Blank remarks stay blank unless the user explicitly supplies a correction.
+  // Z00353 packaging was confirmed by the user on 2026-10-12.
+  const tipBox50 = ['一体盒', '10小盒/中盒', '5中盒/箱', '50小盒/箱', '（2箱起含运费）'];
+  const tipBox16 = ['一体盒', '16小盒/箱', '（2箱起含运费）'];
+  const tipBag = ['起订量：1箱', '（2箱起含运费）'];
+  const consumableSeries = {
+    i: { name: 'I-规格吸头', compatibility: '配套文鳐、吉量使用' },
+    t: { name: 'T规格吸头', compatibility: '配套CH-200/CH-1000/文鳐96使用' },
+    hg: { name: 'T规格吸头', compatibility: '配套文鳐96使用' },
+    td: { name: 'TD袋装吸头' }
+  };
+  const consumableProducts = [
+    ['Z05417', 'I-TIPS-12.5.10-S', 'i', 'i-12-5', '12.5μl透明灭菌-384/盒', tipBox50],
+    ['Z05418', 'I-TIPS-12.5.11-S', 'i', 'i-12-5', '12.5μl透明灭菌-385/盒', tipBox50],
+    ['Z05851', 'I-TIPS-125.10-S', 'i', 'i-125', '125μl透明灭菌-384/盒', tipBox50],
+    ['Z00352', 'I-TIPS-125-LX.10-S', 'i', 'i-125', '125μl透明灭菌带滤芯-384/盒', tipBox50],
+    ['Z05392', 'I-TIPS-300.10-S', 'i', 'i-300', '300μl透明灭菌-96/盒', tipBox50],
+    ['Z00353', 'I-TIPS-300-LX.10-S', 'i', 'i-300', '300μl透明灭菌带滤芯-96/盒', tipBox50],
+    ['Z05604', 'I-TIPS-1250.10-S', 'i', 'i-1250', '1250μl透明灭菌-96/盒'],
+    ['Z05659', 'I-TIPS-1250-LX.10-S', 'i', 'i-1250', '1250μl透明灭菌带滤芯-96/盒'],
+    ['Z06175', 'T-TIPS-50.10-S', 't', 't-50', '50μl透明灭菌-96支/盒', tipBox50],
+    ['Z05658', 'T-TIPS-50-LX-S', 't', 't-50', '50μl透明灭菌带滤芯-96支/盒', tipBox50],
+    ['Z06034', 'T-TIPS-200.10-S', 't', 't-200', '200μl透明灭菌-96支/盒', tipBox50],
+    ['Z05592', 'T-TIPS-200-LX.10-S', 't', 't-200', '200μl透明灭菌带滤芯-96支/盒', tipBox50],
+    ['Z06130', 'T-TIPS-1000.10-S', 't', 't-1000', '1000μl透明灭菌-96支/盒', tipBox16],
+    ['Z06198', 'T-TIPS-1000-LX-S', 't', 't-1000', '1000μl透明灭菌带滤芯-96支/盒', tipBox16],
+    ['Z06074', 'TD-TIPS-200', 'td', 'td-tips', '200μl透明-1000支/袋，10袋/箱', tipBag],
+    ['Z01673', 'TD-TIPS-300', 'td', 'td-tips', '300μl透明-1000支/袋，10袋/箱', tipBag],
+    ['Z06167', 'TD-TIPS-1000', 'td', 'td-tips', '1000μl透明-1000支/袋，10袋/箱', tipBag],
+    ['Z06178', 'T-TIPS-HG.50.10-S', 'hg', 'hg-50', '50μl透明灭菌-96支/盒', tipBox50],
+    ['Z06179', 'T-TIPS-HG.50.10-LX-S', 'hg', 'hg-50', '50μl透明灭菌带滤芯-96支/盒', tipBox50],
+    ['Z06124', 'T-TIPS-HG.200.10-S', 'hg', 'hg-200', '200μl透明灭菌-96支/盒', tipBox50],
+    ['Z06126', 'T-TIPS-HG.200-LX.10-S', 'hg', 'hg-200', '200μl透明灭菌带滤芯-96支/盒', tipBox50],
+    ['Z06180', 'T-TIPS-HG.1000.10-S', 'hg', 'hg-1000', '1000μl透明灭菌-96支/盒', tipBox50],
+    ['Z06181', 'T-TIPS-HG.1000-LX.10-S', 'hg', 'hg-1000', '1000μl透明灭菌带滤芯-96支/盒', tipBox50],
+    ['Z05946', 'C-195-96V', '96道单孔储液槽（锥底）', 'reservoir-96', '5个/袋，10袋/箱'],
+    ['Z05948', 'C-195-96V-S', '96道单孔储液槽（锥底） 无菌', 'reservoir-96', '5个/袋，10袋/箱'],
+    ['Z00329', 'C-195-S', '190ml储液槽', 'reservoir-190', '透明平底 灭菌，190ml，5块/袋，2袋/盒，10袋/箱'],
+    ['Z05182', 'C-50-S', '50ml储液槽', 'reservoir-50', '白色锥底、灭菌 50ml、单个装'],
+    ['Z02162', 'C-15-12V-S', '12道储液槽', 'reservoir-12', '5个/袋，10袋/箱'],
+    ['Z05439', 'C-75-4V-S', '4道储液槽，高裙边', 'reservoir-4', '75ml/孔，灭菌，5个/袋，10袋/箱'],
+    ['Z05959', 'B-2.2U-S', '96孔深孔板', 'deep-well-plate', '2.2ml，5个/包，10包/箱，灭菌，无热源，方孔U底'],
+    ['Z05823', 'HSM-PA', '可穿刺-铝箔热封膜', 'film-pa', '125mm*80mm，10片/袋'],
+    ['Z05341', 'HSM-TA', '光面铝箔热封膜（可撕）', 'film-ta', '100片/包，50包/箱 125mm*83mm'],
+    ['Z05342', 'HSM-YW', '压纹铝箔热封板膜', 'film-yw', '100片/包，50包/箱 125mm*83mm'],
+    ['Z00410', 'ZF-9-S-EP2', '96/384孔板用铝箔（2丝）', 'film-ep2', '100张/包'],
+    ['Z06278', 'G-XQ-100', '血清移液管-100', 'serological-pipettes', '10支/包，10包/箱/灭菌（100支/箱）'],
+    ['Z06277', 'G-XQ-50', '血清移液管-50', 'serological-pipettes', '25支/包，8包/箱/灭菌（200支/箱）'],
+    ['Z06276', 'G-XQ-25', '血清移液管-25', 'serological-pipettes', '25支/包，10包/箱/灭菌（250支/箱）'],
+    ['Z06275', 'G-XQ-10', '血清移液管-10', 'serological-pipettes', '50支/包，10包/箱/灭菌（500支/箱）'],
+    ['Z06274', 'G-XQ-5', '血清移液管-5', 'serological-pipettes', '50支/包，10包/箱/灭菌（500支/箱）']
+  ].map(([productCode, model, seriesOrName, image, summary, notes = []]) => ({
+    // Retain this existing SKU's selection ID; removed generic IDs are filtered out on load.
+    id: productCode === 'Z05851' ? 'consumable-i-tips-125-10-s' : `consumable-${productCode.toLowerCase()}`,
+    ...(consumableSeries[seriesOrName] || { name: seriesOrName }),
+    productCode,
+    model,
+    categoryCode: '05',
+    source: 'consumable',
+    image: `/media/catalog/consumables/${image}.webp`,
+    summary,
+    ...(notes.length ? {
+      packaging: notes.filter((note) => !note.includes('含运费')),
+      shipping: notes.find((note) => note.includes('含运费')) || ''
+    } : {})
   }));
 
   const agencyGroups = [
@@ -136,8 +193,23 @@
     ...agencyProductDetails[name]
   })));
 
-  const products = [...ownProducts, ...agencyProducts].map((product) => ({ ...product, category: categoryName[product.categoryCode] }));
+  const products = [...ownProducts, ...consumableProducts, ...agencyProducts].map((product) => ({ ...product, category: categoryName[product.categoryCode] }));
   const productMap = new Map(products.map((product) => [product.id, product]));
+  // Merge same-photo consumable cards, not their SKU records. Inquiry IDs stay exact.
+  const productGroups = [];
+  const consumableImageGroups = new Map();
+  products.forEach((product) => {
+    const existing = product.source === 'consumable' && consumableImageGroups.get(product.image);
+    if (existing) {
+      existing.variants.push(product);
+    } else {
+      const group = { id: product.id, variants: [product] };
+      productGroups.push(group);
+      if (product.source === 'consumable') consumableImageGroups.set(product.image, group);
+    }
+  });
+  const groupMap = new Map(productGroups.map((group) => [group.id, group]));
+  const variantChoices = new Map();
   const storageKey = 'zuofei-product-selection-v1';
 
   const searchInput = document.querySelector('#product-search');
@@ -177,28 +249,88 @@
   const selectedProducts = () => [...selected].map((id) => productMap.get(id)).filter(Boolean);
   const persistSelection = () => localStorage.setItem(storageKey, JSON.stringify([...selected]));
 
-  function filteredProducts() {
+  function filteredProductGroups() {
     const query = searchInput.value.trim().toLowerCase();
     const category = categorySelect.value;
-    return products.filter((product) => {
+    const matches = (product) => {
       if (source !== 'all' && product.source !== source) return false;
       if (category !== 'all' && product.categoryCode !== category) return false;
       if (!query) return true;
-      return `${productName(product)} ${product.model || ''} ${product.productCode || ''} ${product.category} ${product.summary} ${sourceLabel(product)}`.toLowerCase().includes(query);
-    });
+      return `${productName(product)} ${product.model || ''} ${product.productCode || ''} ${product.category} ${product.summary} ${(product.packaging || []).join(' ')} ${product.shipping || ''} ${sourceLabel(product)}`.toLowerCase().includes(query);
+    };
+    return productGroups.map((group) => ({ group, matches: group.variants.filter(matches) })).filter((entry) => entry.matches.length);
+  }
+
+  function groupName(group) {
+    const product = group.variants[0];
+    if (product.source !== 'consumable') return product.name;
+    if (product.model.startsWith('G-XQ-')) return '血清移液管';
+    const capacities = [...new Set(group.variants.map((variant) => variant.summary.match(/^[\d.]+μl/)?.[0]))];
+    return capacities.length === 1 && capacities[0] ? `${product.name} · ${capacities[0]}` : product.name;
+  }
+
+  function variantLabel(product, group) {
+    if (group.variants.some((variant) => variant.summary.includes('带滤芯'))) {
+      return product.summary.includes('带滤芯') ? '带滤芯' : '标准款';
+    }
+    if (product.model.startsWith('G-XQ-')) return product.model;
+    if (product.model.startsWith('TD-TIPS-')) return product.summary.split('透明')[0];
+    if (group.variants.some((variant) => variant.name.includes('无菌'))) {
+      return product.name.includes('无菌') ? '无菌款' : '标准款';
+    }
+    return product.summary;
+  }
+
+  function productDetailsMarkup(product) {
+    return `${product.productCode ? `<p class="shop-product-model">产品编号：${escapeHtml(product.productCode)}</p>` : ''}${product.model ? `<p class="shop-product-model">型号：${escapeHtml(product.model)}</p>` : ''}${product.summary.split('\n').map((paragraph) => `<p class="shop-product-summary">${escapeHtml(paragraph)}</p>`).join('')}${product.packaging ? `<div class="shop-product-details"><ul class="shop-product-packaging">${product.packaging.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${product.shipping ? `<p class="shop-product-shipping">${escapeHtml(product.shipping)}</p>` : ''}</div>` : ''}`;
+  }
+
+  function selectButtonMarkup(isSelected) {
+    return `<span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}`;
+  }
+
+  function chosenVariant(group, matches) {
+    const query = searchInput.value.trim().toLowerCase();
+    const choice = variantChoices.get(group.id);
+    // New searches reveal their matching SKU. Explicit choices made afterwards
+    // survive rerenders, even if another variant originally matched that search.
+    const product = choice && (choice.query === query || matches.some((variant) => variant.id === choice.id))
+      ? productMap.get(choice.id) : matches[0];
+    variantChoices.set(group.id, { id: product.id, query });
+    return product;
+  }
+
+  function updateProductCard(card, product) {
+    const isSelected = selected.has(product.id);
+    card.dataset.productId = product.id;
+    card.classList.toggle('is-selected', isSelected);
+    card.querySelector('.shop-product-specification').innerHTML = productDetailsMarkup(product);
+    const button = card.querySelector('[data-select-product]');
+    button.dataset.selectProduct = product.id;
+    button.setAttribute('aria-pressed', String(isSelected));
+    button.innerHTML = selectButtonMarkup(isSelected);
   }
 
   function renderProducts() {
-    const visible = filteredProducts();
-    resultCount.textContent = `共${visible.length}款产品`;
+    const visible = filteredProductGroups();
+    const modelCount = visible.reduce((total, entry) => total + entry.matches.length, 0);
+    resultCount.textContent = searchInput.value.trim()
+      ? `找到${visible.length}款产品 · ${modelCount}个匹配型号`
+      : `共${visible.length}款产品${modelCount !== visible.length ? ` · ${modelCount}个型号` : ''}`;
     emptyState.hidden = visible.length !== 0;
     grid.hidden = visible.length === 0;
-    grid.innerHTML = visible.map((product) => {
+    grid.innerHTML = visible.map(({ group, matches }) => {
+      const product = chosenVariant(group, matches);
+      const name = groupName(group);
       const isSelected = selected.has(product.id);
-      return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}">
-        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(productName(product))}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
-        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(product.name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}</h3>${product.productCode ? `<p class="shop-product-model">产品编号：${escapeHtml(product.productCode)}</p>` : ''}${product.model ? `<p class="shop-product-model">型号：${escapeHtml(product.model)}</p>` : ''}${product.summary.split('\n').map((paragraph) => `<p class="shop-product-summary">${escapeHtml(paragraph)}</p>`).join('')}${product.packaging ? `<div class="shop-product-details"><ul class="shop-product-packaging">${product.packaging.map((line) => `<li>${escapeHtml(line)}</li>`).join('')}</ul>${product.shipping ? `<p class="shop-product-shipping">${escapeHtml(product.shipping)}</p>` : ''}</div>` : ''}</div>
-        <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}"><span aria-hidden="true">${isSelected ? '✓' : '+'}</span>${isSelected ? '已加入咨询' : '加入咨询'}</button>
+      const hasVariants = group.variants.length > 1;
+      return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}" data-product-group="${group.id}">
+        <div class="shop-product-media"><img src="${base}${product.image}" alt="${escapeHtml(name)}" loading="lazy"><span class="shop-product-source shop-product-source--${product.source}">${sourceLabel(product)}</span></div>
+        <div class="shop-product-copy"><p class="shop-product-category">${product.categoryCode} · ${escapeHtml(product.category)}</p><h3>${escapeHtml(name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}</h3>
+          ${hasVariants ? `<label class="shop-product-variant"><span>选择规格 <small>${group.variants.length}种可选</small></span><select data-product-variant="${group.id}" aria-label="${escapeHtml(name)}选择规格">${group.variants.map((variant) => `<option value="${variant.id}"${variant.id === product.id ? ' selected' : ''}>${escapeHtml(variantLabel(variant, group))}</option>`).join('')}</select></label>` : ''}
+          <div class="shop-product-specification"${hasVariants ? ' role="status" aria-live="polite" aria-atomic="true"' : ''}>${productDetailsMarkup(product)}</div>
+        </div>
+        <button class="shop-product-select" type="button" data-select-product="${product.id}" aria-pressed="${isSelected}">${selectButtonMarkup(isSelected)}</button>
       </article>`;
     }).join('');
   }
@@ -245,6 +377,16 @@
   grid.addEventListener('click', (event) => {
     const button = event.target.closest('[data-select-product]');
     if (button) toggleProduct(button.dataset.selectProduct);
+  });
+  grid.addEventListener('change', (event) => {
+    const selector = event.target.closest('[data-product-variant]');
+    if (!selector) return;
+    const group = groupMap.get(selector.dataset.productVariant);
+    const product = group && group.variants.find((variant) => variant.id === selector.value);
+    if (!product) return;
+    variantChoices.set(group.id, { id: product.id, query: searchInput.value.trim().toLowerCase() });
+    // Keep the native select in place to preserve focus and keyboard operation.
+    updateProductCard(selector.closest('.shop-product-card'), product);
   });
   searchInput.addEventListener('input', renderProducts);
   categorySelect.addEventListener('change', () => {
