@@ -65,8 +65,9 @@
     ['Z05592', 'T-TIPS-200-LX.10-S', 't', 't-200', '200μl透明灭菌带滤芯-96支/盒', tipBox50],
     ['Z06130', 'T-TIPS-1000.10-S', 't', 't-1000', '1000μl透明灭菌-96支/盒', tipBox16],
     ['Z06198', 'T-TIPS-1000-LX-S', 't', 't-1000', '1000μl透明灭菌带滤芯-96支/盒', tipBox16],
+    // Z06323 replaces the 300μl SKU per the user's updated product record (2026-10-12).
+    ['Z06323', 'TD-TIPS-50', 'T-规格吸头', 'td-tips', '50μL/透明/非灭菌，1000支/袋，10袋/箱', ['单位：箱', ...tipBag]],
     ['Z06074', 'TD-TIPS-200', 'td', 'td-tips', '200μl透明-1000支/袋，10袋/箱', tipBag],
-    ['Z01673', 'TD-TIPS-300', 'td', 'td-tips', '300μl透明-1000支/袋，10袋/箱', tipBag],
     ['Z06167', 'TD-TIPS-1000', 'td', 'td-tips', '1000μl透明-1000支/袋，10袋/箱', tipBag],
     ['Z06178', 'T-TIPS-HG.50.10-S', 'hg', 'hg-50', '50μl透明灭菌-96支/盒', tipBox50],
     ['Z06179', 'T-TIPS-HG.50.10-LX-S', 'hg', 'hg-50', '50μl透明灭菌带滤芯-96支/盒', tipBox50],
@@ -261,9 +262,10 @@
     return productGroups.map((group) => ({ group, matches: group.variants.filter(matches) })).filter((entry) => entry.matches.length);
   }
 
-  function groupName(group) {
+  function groupName(group, activeProduct = group.variants[0]) {
     const product = group.variants[0];
     if (product.source !== 'consumable') return product.name;
+    if (product.model.startsWith('TD-TIPS-')) return activeProduct.name;
     if (product.model.startsWith('G-XQ-')) return '血清移液管';
     const capacities = [...new Set(group.variants.map((variant) => variant.summary.match(/^[\d.]+μl/)?.[0]))];
     return capacities.length === 1 && capacities[0] ? `${product.name} · ${capacities[0]}` : product.name;
@@ -274,7 +276,7 @@
       return product.summary.includes('带滤芯') ? '带滤芯' : '标准款';
     }
     if (product.model.startsWith('G-XQ-')) return product.model;
-    if (product.model.startsWith('TD-TIPS-')) return product.summary.split('透明')[0];
+    if (product.model.startsWith('TD-TIPS-')) return product.summary.match(/^[\d.]+μl/i)?.[0] || product.model;
     if (group.variants.some((variant) => variant.name.includes('无菌'))) {
       return product.name.includes('无菌') ? '无菌款' : '标准款';
     }
@@ -302,8 +304,12 @@
 
   function updateProductCard(card, product) {
     const isSelected = selected.has(product.id);
+    const name = groupName(groupMap.get(card.dataset.productGroup), product);
     card.dataset.productId = product.id;
     card.classList.toggle('is-selected', isSelected);
+    card.querySelector('h3').innerHTML = `${escapeHtml(name)}${product.compatibility ? `<span class="shop-product-compatibility">（${escapeHtml(product.compatibility)}）</span>` : ''}`;
+    card.querySelector('.shop-product-media img').alt = name;
+    card.querySelector('[data-product-variant]').setAttribute('aria-label', `${name}选择规格`);
     card.querySelector('.shop-product-specification').innerHTML = productDetailsMarkup(product);
     const button = card.querySelector('[data-select-product]');
     button.dataset.selectProduct = product.id;
@@ -321,7 +327,7 @@
     grid.hidden = visible.length === 0;
     grid.innerHTML = visible.map(({ group, matches }) => {
       const product = chosenVariant(group, matches);
-      const name = groupName(group);
+      const name = groupName(group, product);
       const isSelected = selected.has(product.id);
       const hasVariants = group.variants.length > 1;
       return `<article class="shop-product-card${isSelected ? ' is-selected' : ''}" data-product-id="${product.id}" data-product-group="${group.id}">
